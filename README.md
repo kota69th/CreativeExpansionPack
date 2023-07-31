@@ -1,6 +1,6 @@
 # Creative Expansion Pack
 
-![notblurredexpansion](https://github.com/kota69th/CreativeExpansionPack/assets/104696918/0d826a6a-29cb-44a5-947c-19ae6af505f1)
+![notblurredexpansion](https://pbs.twimg.com/media/F2XOuFsXQAA4qW8?format=jpg&name=medium)
 ###### A Fall Guys mod meant to improve Fall Guys Creative.
 
 
