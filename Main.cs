@@ -141,6 +141,7 @@ namespace FraggleExpansion
                         Drawable._restrictedDrawingAxis = LevelEditorDrawableData.DrawRestrictedAxis.Up;
 
                         UnityEngine.Object.Destroy(Prefab.GetComponent<LevelEditorFloorScaleParameter>());
+                        Prefab.GetComponent<LevelEditorPlaceableObject>().hasParameterComponents = false;
                     }
                     if (FraggleExpansionData.InsanePainterSize)
                     {
