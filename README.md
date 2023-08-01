@@ -38,6 +38,8 @@ Is there a discord for this mod?
 ## Credits
 > kota69th, since I created the mod (no shit)
 
+> sinai for making UnityExplorer (brought mad help during the mod's dev.)
+
 > crispy_squid for the mod's logo and Rising Slime Icon in-game.
 
 > MelonLoader for a tiny part of the code relating to Scenes.
