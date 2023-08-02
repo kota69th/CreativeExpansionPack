@@ -52,6 +52,6 @@ I can't play normal Fall Guys when Creative Expansion Pack is installed, how to 
 
 > MelonLoader for a tiny part of the code relating to Scenes.
 
-###### Honorable mention for the logo [here](https://github.com/kota69th/CreativeExpansionPack/assets/104696918/0baa68bd-42cb-46c9-8bdc-5606f0080912) (by Ocapa)
+###### Honorable mention for the logo [here](https://pbs.twimg.com/media/F2jB2VDWYAAzmb1?format=png&name=small) (by Ocapa)
 ##
 ##### Not affiliated with Mediatonic.
