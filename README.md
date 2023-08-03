@@ -4,7 +4,7 @@
 ###### A Fall Guys mod meant to improve Fall Guys Creative.
 
 
-## Questions and Answers :
+## Questions and Answers
 
 How is Creative Expansion Pack made?
 > Creative Expansion Pack is made using BepinEx, a modding framework for games made with Unity.
@@ -27,7 +27,7 @@ Is there a discord for this mod?
 I can't play normal Fall Guys when Creative Expansion Pack is installed, how to deal with that?!
 > You can't, in order to play the normal game you got to uninstall BepinEx, you can do that by using the "Restore_EAC" batch script in your game's root and quickly switch back to the mod by using the "Install_BepinEx" batch script that's in the same folder.
 
-## Installation Guide : 
+## Installation Guide 
 
  1. Download the latest release [here](https://github.com/kota69th/CreativeExpansionPack/releases/tag/stable).
  
@@ -37,7 +37,7 @@ I can't play normal Fall Guys when Creative Expansion Pack is installed, how to 
  
  4. Enjoy! Mind that the first boot might take some time...
 
-## Uninstallation Guide : 
+## Uninstallation Guide 
 
 1. Go to your game's root,
 
