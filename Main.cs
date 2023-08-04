@@ -1,4 +1,4 @@
-﻿using BepInEx;
+using BepInEx;
 using BepInEx.IL2CPP;
 using HarmonyLib;
 using UnityEngine;
@@ -36,7 +36,7 @@ namespace FraggleExpansion
 {
 
 
-    [BepInPlugin("FraggleExpansion", "Creative Expansion Pack", "2.0")]
+    [BepInPlugin("FraggleExpansion", "Creative Expansion Pack", "2.1")]
     public class Main : BasePlugin
     {
         Harmony _Harmony = new Harmony("com.simp.fraggleexpansion");
@@ -44,7 +44,7 @@ namespace FraggleExpansion
 
         public override void Load()
         {
-            Log.LogMessage("Creative Expansion Pack | RELEASE | FINAL");
+            Log.LogMessage("Creative Expansion Pack | RELEASE | THUG HOTFIX");
             Log.LogMessage("This mod is an extension Fall Guys Creative.");
 
             _Harmony.PatchAll(typeof(HarmonyPatches));
@@ -82,13 +82,15 @@ namespace FraggleExpansion
 
             if (FraggleExpansionData.AddUnusedObjects)
             {
-                AddObjectToCurrentList("placeable_special_goo_slide_large", LevelEditorPlaceableObject.Category.Platforms, 2);
+                if (ThemeManager.CurrentThemeData.ID != "THEME_VANILLA")
+                    AddObjectToCurrentList("placeable_obstacle_spinningbeamshort_retro_large", LevelEditorPlaceableObject.Category.MovingSurfaces, 0, 838);
+                AddObjectToCurrentList("placeable_special_goo_slide_large", LevelEditorPlaceableObject.Category.Platforms, 2, 261);
                 
-               /* if (ThemeManager.CurrentThemeData.ID == "THEME_RETRO")
-                AddObjectToCurrentList("placeable_obstacle_spinningbeamshort_retro_large", LevelEditorPlaceableObject.Category.MovingSurfaces, 0); */
             }
             if (ThemeManager.CurrentThemeData.ID == "THEME_RETRO" && GameModeManager.CurrentGameModeData.ID == "GAMEMODE_SURVIVAL")
-                AddObjectToCurrentList("placeable_rule_floorstart_survival_large", LevelEditorPlaceableObject.Category.Platforms, 2);
+                AddObjectToCurrentList("placeable_rule_floorstart_survival_large", LevelEditorPlaceableObject.Category.Platforms, 2, 172);
+
+
 
             AddCMSStringKeys();
             ManageCostRotationStockForAllObjects(FraggleExpansionData.RemoveCostAndStock, FraggleExpansionData.RemoveRotation);
@@ -99,10 +101,15 @@ namespace FraggleExpansion
             while (LevelEditorManager.Instance.MapPlacementBounds == null)
                 yield return null;
 
-            // This might not always work
+            // Only works when a new round is created, but you can run this in a round load postfix like done here
             if(FraggleExpansionData.BypassBounds)
             LevelEditorManager.Instance.MapPlacementBounds = new Bounds(LevelEditorManager.Instance.MapPlacementBounds.center, new Vector3(100000, 100000, 100000));
 
+            while (!UnityEngine.Object.FindObjectOfType<LevelEditorNavigationScreenViewModel>())
+                yield return null;
+
+            if(GameModeManager.CurrentGameModeData.ID != "GAMEMODE_GAUNTLET")
+            UnityEngine.Object.FindObjectOfType<LevelEditorNavigationScreenViewModel>().SetCheckListVisible(false);
             yield break;
         }
 
@@ -110,12 +117,15 @@ namespace FraggleExpansion
         {
             Dictionary<string, string> StringsToAdd = new Dictionary<string, string>()
             {
-                {"wle_rulebook_noofwinners", "Number of Winners"},
+                {"wle_rulebook_noofwinners", "Number of Winners"}, 
                 {"wle_checklist_spawnPoints", "Place a holographic Start Line"},
                 {"wle_item_holographicstartname", "The Braindead Start Line"},
                 {"wle_item_holographicstartdesc", "A holographic platform that defines where players are located at the Start of the Round!"},
+                {"wle_creativeexpansion_stop", "STOP!"},
+                {"wle_creativeexpansion_stop_description", "Creative Expansion Pack does make upcoming gamemodes work.\nHowever, they do not work in-game! Due to this issue publishing a level in the gamemode you're in has been disabled."},
+                {"wle_creative_expansion_stop_confirm", "UNDERSTOOD..."}
             };
-            
+
             foreach(var ToAdd in StringsToAdd)
             {
                 if (!CMSLoader.Instance._localisedStrings.ContainsString(ToAdd.Key))
@@ -141,7 +151,6 @@ namespace FraggleExpansion
                         Drawable._restrictedDrawingAxis = LevelEditorDrawableData.DrawRestrictedAxis.Up;
 
                         UnityEngine.Object.Destroy(Prefab.GetComponent<LevelEditorFloorScaleParameter>());
-                        Prefab.GetComponent<LevelEditorPlaceableObject>().hasParameterComponents = false;
                     }
                     if (FraggleExpansionData.InsanePainterSize)
                     {
@@ -241,7 +250,7 @@ namespace FraggleExpansion
             }
         }
 
-        public void AddObjectToCurrentList(string AssetRegistryName, LevelEditorPlaceableObject.Category Category = LevelEditorPlaceableObject.Category.Advanced, int DefaultVariantIndex = 0)
+        public void AddObjectToCurrentList(string AssetRegistryName, LevelEditorPlaceableObject.Category Category = LevelEditorPlaceableObject.Category.Advanced, int DefaultVariantIndex = 0, int ID = 0)
         {
             try
             {
@@ -250,9 +259,10 @@ namespace FraggleExpansion
                 PlaceableObjectData Owner = Loadable.Asset.Cast<PlaceableVariant_Base>().Owner;
                 LevelEditorObjectList CurrentLevelEditorObjectList = ThemeManager.CurrentThemeData.ObjectList;
                 var CurrentObjectList = LevelEditorObjectList.CurrentObjects.Cast<Il2CppSystem.Collections.Generic.List<PlaceableObjectData>>();
+                if (Owner == null) return;
                 if (CurrentObjectList.Contains(Owner)) return;
                 Owner.category = Category;
-                VariantTreeElement VariantElement = new VariantTreeElement(Owner.name, 0, 12);
+                VariantTreeElement VariantElement = new VariantTreeElement(Owner.name, 0, ID);
                 Owner.defaultVariant = Owner.objectVariants[DefaultVariantIndex];
                 VariantElement.Variant = Owner.objectVariants[DefaultVariantIndex];
                 CurrentLevelEditorObjectList.CarouselItems.children.Add(VariantElement);
@@ -268,20 +278,13 @@ namespace FraggleExpansion
         public static LevelEditorPlaceableObject CurrentStart;
         public static bool HasGentryForSurvivalBeenTracked = false;
 
-        public void FixCompletionSurvival()
-        {
-            foreach (var CheckListViewModel in UnityEngine.Object.FindObjectsOfType<LevelEditorCheckListItemViewModel>())
-            {
-                if (CheckListViewModel._critData.Type == LevelEditorOptionsSingleton.Criteria.HexSpawnPoints && CurrentStart != null && !CheckListViewModel.CriteriaComplete)
-                    CheckListViewModel.OnCriteriaChanged(CurrentStart.gameObject.activeSelf);
-            }
-        }
+
 
         public void OnUpdate()
         {
              if(Input.GetKeyDown(KeyCode.End))
              if(FraggleCommonManager.Instance.IsInLevelEditor)
-             if(!LevelEditorManager.Instance.IsInLevelEditorState<LevelEditorStateMenus>() || !LevelEditorManager.Instance.IsInLevelEditorState<LevelEditorStateTest>())
+             if(!LevelEditorManager.Instance.IsInLevelEditorState<LevelEditorStateMenus>() && !LevelEditorManager.Instance.IsInLevelEditorState<LevelEditorStateTest>() && !LevelEditorManager.Instance.IsInLevelEditorState<LevelEditorStateExplore>())
                  LevelEditorManager.Instance.ReplaceCurrentLevelEditorState(new LevelEditorStateMenus(LevelEditorManager.Instance, false, false).Cast<ILevelEditorState>());
         }
 
@@ -291,6 +294,10 @@ namespace FraggleExpansion
             if (SlimeSetupDone) yield break;
             while (!UnityEngine.Object.FindObjectOfType<MainMenuManager>().IsOnMainMenu)
                 yield return null;
+
+            //
+            // Rising Slime
+            //
 
             var GameModeSlime = ScriptableObject.CreateInstance<GameModeDataSlimeClimb>();
             GameModeSlime.name = "GameMode_RisingSlime";
@@ -316,6 +323,7 @@ namespace FraggleExpansion
             GameModeSlime.id = "GAMEMODE_SLIMECLIMB";
 
             
+
             var GauntletRulebook = GameModeManager.GetAvailableGameMode("GAMEMODE_GAUNTLET")._rulebookContentDefinition;
             var NewRulebook = ScriptableObject.CreateInstance<RulebookMenuContentDefinition>();
             NewRulebook._content = new Il2CppReferenceArray<RulebookMenuContentBase>(5);
@@ -333,7 +341,6 @@ namespace FraggleExpansion
 
             var Data = new FraggleCommonManager.CarouselItemData();
             CMSLoader.Instance._localisedStrings._localisedStrings["wle_mode_2"] = "RISING SLIME";
-            CMSLoader.Instance._localisedStrings._localisedStrings["wle_mode_4"] = "SURVIVAL";
             Data.descriptionKey = "wle_mode_info_2";
             Data.titleKey = "wle_mode_2";
             Data.ID = "GAMEMODE_SLIMECLIMB";
@@ -347,6 +354,15 @@ namespace FraggleExpansion
             Datas[0] = GameModeManager.GameModeConfigs[0];
             Datas[1] = GameModeManager.GameModeConfigs[1];
             Datas[2] = GameModeSlime;
+
+            //
+            // Survival Mode Extras
+            //
+
+            CMSLoader.Instance._localisedStrings._localisedStrings["wle_mode_4"] = "SURVIVAL";
+
+            // Initialize the extra gamemode...
+
             GameModeManager._allGameModeDatas = Datas;
             GameModeManager._availableGameModeDatas = Datas;
             GameModeManager.InitializeGameModeData(Datas);
@@ -371,8 +387,9 @@ namespace FraggleExpansion
             yield return new WaitForSeconds(0.1f); // you can do better than this
 
             if (!UnityEngine.Object.FindObjectOfType<BootSplashScreenViewModel>()) yield break;
-                
-            UnityEngine.Object.FindObjectOfType<BootSplashScreenViewModel>().transform.Find("Sprite").GetComponent<Image>().sprite = MakeOutAnIcon("https://github.com/kota69th/FranticExplorer-Bundles/blob/main/totallyrandomimlagethatisntcepfinallogo.png?raw=true", 1919, 1080);
+
+            var BootSplash = UnityEngine.Object.FindObjectOfType<BootSplashScreenViewModel>();
+            BootSplash.gameObject.FindChild("Sprite").GetComponent<Image>().sprite = MakeOutAnIcon("https://github.com/kota69th/FranticExplorer-Bundles/blob/main/totallyrandomimlagethatisntcepfinallogo.png?raw=true", 1919, 1080);
              
             if (!RuntimeManager.HasBankLoaded("BNK_Emote_Glitch" + ".assets"))
             {
@@ -499,6 +516,13 @@ namespace FraggleExpansion
             return true;
         }
 
+        [HarmonyPatch(typeof(LevelEditorManagerUI), nameof(LevelEditorManagerUI.ShowCheckList)), HarmonyPrefix]
+        public static bool ShowCheckList(ref bool show)
+        {
+            if (GameModeManager.CurrentGameModeData.ID != "GAMEMODE_GAUNTLET")
+                show = false;
+            return true;
+        }
 
         [HarmonyPatch(typeof(LevelEditorManagerAudio), nameof(LevelEditorManagerAudio.StartGameplayMusic)), HarmonyPrefix]
         public static bool CustomMusic(LevelEditorManagerAudio __instance)
@@ -517,6 +541,13 @@ namespace FraggleExpansion
             return !FraggleExpansionData.CustomTestMusic;
         }
 
+        [HarmonyPatch(typeof(LevelEditorCheckpointFloorData), nameof(LevelEditorCheckpointFloorData.UpdateChevron)), HarmonyPrefix]
+        public static bool FixChevronScaling(ref Vector3 scale)
+        {
+            scale = scale.Abs();
+            return true;
+        }
+
         [HarmonyPatch(typeof(LevelLoader), nameof(LevelLoader.LoadObjects)), HarmonyPrefix]
         public static bool LoadSlimeRisingData(LevelLoader __instance ,Il2CppReferenceArray<UGCObjectDataSchema> schemas)
         {
@@ -528,7 +559,14 @@ namespace FraggleExpansion
             return true;
         }
 
-        [HarmonyPatch(typeof(LevelEditorOptionsSingleton), nameof(LevelEditorOptionsSingleton.CurrentSlimeSpeedValue), MethodType.Getter), HarmonyPrefix]
+        [HarmonyPatch(typeof(LevelLoader), nameof(LevelLoader.LoadObjects)), HarmonyPostfix]
+        public static void BoundsOnExistingRound(LevelLoader __instance, Il2CppReferenceArray<UGCObjectDataSchema> schemas)
+        {
+            if (FraggleExpansionData.BypassBounds)
+            LevelEditorManager.Instance.MapPlacementBounds = new Bounds(LevelEditorManager.Instance.MapPlacementBounds.center, new Vector3(100000, 100000, 100000));
+        }
+
+    [HarmonyPatch(typeof(LevelEditorOptionsSingleton), nameof(LevelEditorOptionsSingleton.CurrentSlimeSpeedValue), MethodType.Getter), HarmonyPrefix]
         public static bool SlimeSpeedForNow(out float __result)
         {
             __result = DataRisingSlime.SlimeSpeedPercentage / 100;
@@ -539,16 +577,6 @@ namespace FraggleExpansion
         public static bool SlimePercentageForNow(out float __result)
         {
             __result = DataRisingSlime.SlimeHeightPercentage / 100;
-            return false;
-        }
-        
-
-
-        [HarmonyPatch(typeof(LevelEditorCheckListItemViewModel), nameof(LevelEditorCheckListItemViewModel.CriteraText), MethodType.Getter), HarmonyPrefix]
-        public static bool SetCompletionText(LevelEditorCheckListItemViewModel __instance, out string __result)
-        {
-            string key = __instance._tagData.GetCriteriaData(__instance._critData.Type).DescriptionLocKey;
-            __result = __instance._critData.Type == LevelEditorOptionsSingleton.Criteria.HexSpawnPoints ? "Place a braindead Start Line" : __instance._localisedStrings.GetString(key);
             return false;
         }
 
@@ -573,27 +601,24 @@ namespace FraggleExpansion
             return false;
         }
 
+        
         [HarmonyPatch(typeof(LevelEditorManager), nameof(LevelEditorManager.SetObjectiveCompletionCriteriaValue)), HarmonyPostfix]
         public static void CheckBeforeSettingCompletion(LevelEditorManager __instance, LevelEditorOptionsSingleton.Criteria criteria, bool val)
         {
-            // Lord forgive me
-                LevelEditorPlaceableObject StartToMaybeUse = null;
-                var Checkpts = UnityEngine.Object.FindObjectsOfType<LevelEditorCheckpointZone>();
-                if (Checkpts.All(x => x == null)) return;
-                var StartToBaseOn = LevelEditorOptionsSingleton.Instance.GameModeID == "GAMEMODE_SURVIVAL" ? Main.SurvivalStart : ThemeManager.CurrentStartGantry;
-                foreach (var Checkpoint in Checkpts)
-                    if (Checkpoint.GetComponentInParent<LevelEditorPlaceableObject>().ObjectDataOwner.name == StartToBaseOn.name)
-                        StartToMaybeUse = Checkpoint.GetComponentInParent<LevelEditorPlaceableObject>();
-                FraggleExpansion.Main.CurrentStart = FraggleExpansion.Main.CurrentStart != null ? FraggleExpansion.Main.CurrentStart : StartToMaybeUse;
+           if (criteria != LevelEditorOptionsSingleton.Criteria.HexSpawnPoints) return;
+           LevelEditorPlaceableObject StartToMaybeUse = null;
+           var Checkpts = UnityEngine.Object.FindObjectsOfType<LevelEditorCheckpointZone>();
+           if (Checkpts.All(x => x == null)) return;
+           var StartToBaseOn = LevelEditorOptionsSingleton.Instance.GameModeID == "GAMEMODE_SURVIVAL" ? Main.SurvivalStart : ThemeManager.CurrentStartGantry;
+           foreach (var Checkpoint in Checkpts)
+           if (Checkpoint.GetComponentInParent<LevelEditorPlaceableObject>().ObjectDataOwner.name == StartToBaseOn.name)
+               StartToMaybeUse = Checkpoint.GetComponentInParent<LevelEditorPlaceableObject>();
+             FraggleExpansion.Main.CurrentStart = FraggleExpansion.Main.CurrentStart != null ? FraggleExpansion.Main.CurrentStart : StartToMaybeUse;
 
-           
-                __instance._completionCriteria[criteria] = val;
-
-                __instance._completionCriteria[LevelEditorOptionsSingleton.Criteria.HexSpawnPoints] = FraggleExpansion.Main.CurrentStart != null;
-            FraggleExpansion.Main.Instance.FixCompletionSurvival();
+            __instance._completionCriteria[LevelEditorOptionsSingleton.Criteria.HexSpawnPoints] = FraggleExpansion.Main.CurrentStart != null;  
         }
+        
 
-        //  [HarmonyPatch(typeof(LevelEditorManager), nameof(LevelEditorManager._startPlatform), MethodType.Getter)]
         [HarmonyPatch(typeof(LevelEditorManager), nameof(LevelEditorManager.StartPlatform), MethodType.Getter), HarmonyPrefix]
         public static bool StartPlatformSurvivalFix(LevelEditorManager __instance, out LevelEditorPlaceableObject __result)
         {
@@ -626,8 +651,6 @@ namespace FraggleExpansion
                 if (StartPODInstantiated != null)
                 {
                     __instance.RegisterObject(StartPODInstantiated.GetComponent<LevelEditorPlaceableObject>(), false);
-                    // Total bullshit but it's the better way I found
-                    __instance.OnCompletionCriteriaUpdate = Il2CppSystem.Delegate.Combine(__instance.OnCompletionCriteriaUpdate, (LevelEditorManager.CompletionCriteriaUpdateEvent)new System.Action(FraggleExpansion.Main.Instance.FixCompletionSurvival)).Cast<LevelEditorManager.CompletionCriteriaUpdateEvent>();
                     StartPODInstantiated.transform.position = new Vector3(__instance.StartGantrySpawnPosition.x, LevelEditorOptionsSingleton.Instance.StartFloorSpawnHeight, __instance.StartGantrySpawnPosition.z);
 
                     UnityEngine.Object.FindObjectOfType<LevelEditorCameraController>().SetFocusPosition(StartPODInstantiated.transform.position, 0);
@@ -638,17 +661,33 @@ namespace FraggleExpansion
             return false;
         }
 
+        
         [HarmonyPatch(typeof(LevelEditorManager), nameof(LevelEditorManager.ReplaceCurrentLevelEditorState)), HarmonyPrefix]
         public static bool PublishStuff(ILevelEditorState nextState, bool newState = true)
         {
             bool IsInAStateWhereNotSupposedToPublish = GameModeManager.CurrentGameModeData.ID != "GAMEMODE_GAUNTLET" && nextState.TryCast<LevelEditorStateTest>() != null;
+            if (IsInAStateWhereNotSupposedToPublish)
+            {
+                var MenuUI = UnityEngine.Object.FindObjectOfType<LevelEditorNavigationScreenViewModel>();
+                MenuUI.gameObject.SetActive(false);
+                void GetBackToLevelEditor(bool On)
+                {
+                    MenuUI.gameObject.SetActive(true);
+                    LevelEditorManager.Instance.ReplaceCurrentLevelEditorState(new LevelEditorStateReticle(LevelEditorManager.Instance, new Vector3(0, 0, 0)).Cast<ILevelEditorState>());
+                    LevelEditorManager.Instance.Audio.UnpauseBuildMusic();
+                }
+                Il2CppSystem.Action<bool> ActionOnClick = new System.Action<bool>(GetBackToLevelEditor);
+                LevelEditorManagerUI.ShowGenericPopup("wle_creativeexpansion_stop", "wle_creativeexpansion_stop_description", "wle_creative_expansion_stop_confirm", null, UIModalMessage.OKButtonType.Disruptive, ActionOnClick, UIModalMessage.ModalType.MT_OK, PopupInteractionType.Warning);
+                LevelEditorOutlineManager.Instance.Clear();
+            
+            }
             return !IsInAStateWhereNotSupposedToPublish;
         }
-
-    [HarmonyPatch(typeof(COMMON_SelfRespawner), nameof(COMMON_SelfRespawner.FixedUpdate)), HarmonyPrefix]
+        
+        [HarmonyPatch(typeof(COMMON_SelfRespawner), nameof(COMMON_SelfRespawner.FixedUpdate)), HarmonyPrefix]
         public static bool SelfRespawnSurvival(COMMON_SelfRespawner __instance)
         {
-            if (FraggleCommonManager.Instance.IsInLevelEditor && (LevelEditorOptionsSingleton.Instance.GameModeID == "GAMEMODE_SURVIVAL" || (LevelEditorOptionsSingleton.Instance.GameModeID == "GAMEMODE_SLIMECLIMB")))
+            if (FraggleCommonManager.Instance.IsInLevelEditor && LevelEditorOptionsSingleton.Instance.GameModeID != "GAMEMODE_GAUNTLET")
             {
                 if (__instance.transform.position.y < -120 && __instance.CanRespawn && !__instance._isWaitingForRespawn)
                 {
@@ -667,7 +706,6 @@ namespace FraggleExpansion
             start = FraggleExpansion.Main.CurrentStart;
             end = __instance.EndPlatform;
             return GameModeManager.CurrentGameModeData.ID != "GAMEMODE_SURVIVAL";
-            // cunt ass hell start line
         }
 
         [HarmonyPatch(typeof(StandaloneClientInitialisation), nameof(StandaloneClientInitialisation.Awake)), HarmonyPrefix]
@@ -677,7 +715,7 @@ namespace FraggleExpansion
             return true;
         }   
 
-    [HarmonyPatch(typeof(LevelEditorDrawableData), nameof(LevelEditorDrawableData.ApplyScaleToObject)), HarmonyPrefix]
+        [HarmonyPatch(typeof(LevelEditorDrawableData), nameof(LevelEditorDrawableData.ApplyScaleToObject)), HarmonyPrefix]
         public static bool FixCheckpointZoneWithPainterScaling(LevelEditorDrawableData __instance, bool subObj = false)
         {
             if (__instance.FloorType == LevelEditorDrawableData.DrawableSemantic.FloorObject && __instance.gameObject.GetComponent<LevelEditorCheckpointFloorData>() && __instance._checkpointZone != null)
