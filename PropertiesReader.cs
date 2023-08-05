@@ -1,14 +1,11 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
-using System.Runtime.InteropServices;
-using System;
 
 namespace FraggleExpansion
 {
     public class PropertiesReader 
     {
-
         public PropertiesReader() => InitializeData();
 
         public void InitializeData()
