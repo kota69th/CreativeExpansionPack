@@ -2,13 +2,19 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <AssemblyName>Creative_Expansion_Pack</AssemblyName>
+    <AssemblyName>CreativeExpansionPack</AssemblyName>
     <Description>An extension to Fall Guys Creative, by kota69th.</Description>
     <Version>2.0.0</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
     <Copyright></Copyright>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Patches\obj\**" />
+    <EmbeddedResource Remove="Patches\obj\**" />
+    <None Remove="Patches\obj\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="BepInEx.IL2CPP" Version="6.0.0-pre.1" IncludeAssets="compile" />
