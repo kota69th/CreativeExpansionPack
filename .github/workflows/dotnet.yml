@@ -21,7 +21,7 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Add BepInEx nuget source
-      run: dotnet nuget add source https://nuget.bepinex.dev/v3/index.json -n nuget.bepinex.dev #
+      run: dotnet nuget add source https://nuget.bepinex.dev/v3/index.json -n nuget.bepinex.dev
     - name: Add BepInEx packages
       run: | # adds https://nuget.bepinex.dev/packages/BepInEx.IL2CPP and https://nuget.bepinex.dev/packages/BepInEx.PluginInfoProps
         dotnet add package BepInEx.IL2CPP --version 6.0.0-pre.1
