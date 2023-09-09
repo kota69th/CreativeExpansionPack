@@ -4,6 +4,12 @@
 > A Fall Guys mod meant to improve Fall Guys Creative.
 
 
+### Creative Expansion Pack is currently cancelled/on-hold. 
+
+### The mod itself is basically finished and will only be updated if it breaks and that I do care.
+
+
+
 ## Questions and Answers
 
 How is Creative Expansion Pack made?
