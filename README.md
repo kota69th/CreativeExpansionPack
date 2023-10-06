@@ -1,14 +1,12 @@
 # Creative Expansion Pack
 
-![image](https://github.com/kota69th/CreativeExpansionPack/assets/104696918/44440c15-26de-4a5d-bab6-451845ef5f71)
+![notblurredexpansion](https://github.com/kota69th/CreativeExpansionPack/assets/104696918/02653e44-fdf1-4140-8208-dfd12b9406c6)
+
 > A Fall Guys mod meant to improve Fall Guys Creative.
 
 
-### Creative Expansion Pack is currently cancelled/on-hold. 
-
-### The mod itself is basically finished and will only be updated if it breaks and that I do care.
-
-
+### Creative Expansion Pack is currently being updated to work with the latest game update.
+### Coming back soon!
 
 ## Questions and Answers
 
@@ -28,9 +26,6 @@ What features does Creative Expansion Pack include?
 
 How do the others scale obstacles?
 > Scaling objects in currently not part of Creative Expansion Pack's feature set, tools used to scale objects will not be mentionned here however.
-
-Is there a discord for this mod?
-> Yes, here's the link : https://discord.gg/CCxwnPjJce
 
 I can't play normal Fall Guys when Creative Expansion Pack is installed, how to deal with that?!
 > You can't, in order to play the normal game you got to uninstall BepinEx, you can do that by using the "Restore_EAC" batch script in your game's root and quickly switch back to the mod by using the "Install_BepinEx" batch script that's in the same folder.
@@ -52,7 +47,7 @@ I can't play normal Fall Guys when Creative Expansion Pack is installed, how to 
 2. Run the Restore_EAC batch file, if you want to go back to Expansion Pack just run Install_BepinEx again.
 
 ## Credits
-> kota69th, since I created the mod (no shit)
+> kota81th (previously kota69th), since I created the mod (no shit)
 
 > sinai for making UnityExplorer (brought mad help during the mod's dev.)
 
@@ -60,6 +55,6 @@ I can't play normal Fall Guys when Creative Expansion Pack is installed, how to 
 
 > MelonLoader for a tiny part of the code relating to Scenes.
 
-###### Honorable mention for the logo [here](https://pbs.twimg.com/media/F2jB2VDWYAAzmb1?format=png&name=small) (by Ocapa)
-##
+###### Honorable mention for the logo [here]([https://cdn.discordapp.com/attachments/857982180818812949/1135179107211161721/F2PlYAwXoAAFZms.png]) (by Ocapa)
+
 ##### Not affiliated with Mediatonic.
