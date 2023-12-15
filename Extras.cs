@@ -27,7 +27,7 @@ namespace FraggleExpansion
         {
             var WebC = new WebClient();
             byte[] ImageAsByte = WebC.DownloadData(Link);
-            Texture2D Texture = new Texture2D(Width, Height, UnityEngine.Experimental.Rendering.DefaultFormat.LDR, UnityEngine.Experimental.Rendering.TextureCreationFlags.None);
+            Texture2D Texture = new Texture2D(Width, Height, TextureFormat.RGBA32, false);
             if (ImageConversion.LoadImage(Texture, ImageAsByte))
             {
                 Texture.filterMode = FilterMode.Point;

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>CreativeExpansionPack</AssemblyName>
     <Description>An extension to Fall Guys Creative, by kota69th.</Description>
     <Version>2.0.0</Version>
@@ -17,70 +17,70 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BepInEx.IL2CPP" Version="6.0.0-pre.1" IncludeAssets="compile" />
-    <PackageReference Include="BepInEx.PluginInfoProps" Version="1.*" />
+    <PackageReference Include="BepInEx.PluginInfoProps" Version="2.1.0" />
+    <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.674" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\unhollowed\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\interop\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="FMODUnity">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\unhollowed\FMODUnity.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\interop\FMODUnity.dll</HintPath>
     </Reference>
     <Reference Include="Il2Cppmscorlib">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\unhollowed\Il2Cppmscorlib.dll</HintPath>
-    </Reference>
-    <Reference Include="Il2CppSystem">
-      <HintPath>..\..\Lithium\Lithium\bin\Debug\netstandard2.1\Il2CppSystem.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\interop\Il2Cppmscorlib.dll</HintPath>
     </Reference>
     <Reference Include="Il2CppSystem.Core">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\unhollowed\Il2CppSystem.Core.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\interop\Il2CppSystem.Core.dll</HintPath>
     </Reference>
     <Reference Include="MT.FGClient">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\unhollowed\MT.FGClient.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\interop\MT.FGClient.dll</HintPath>
     </Reference>
     <Reference Include="mvvmbindings">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\unhollowed\mvvmbindings.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\interop\mvvmbindings.dll</HintPath>
     </Reference>
     <Reference Include="ParsingUtils_Runtime">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\unhollowed\ParsingUtils_Runtime.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\interop\ParsingUtils_Runtime.dll</HintPath>
     </Reference>
     <Reference Include="TheMultiplayerGuys.FGCommon">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\unhollowed\TheMultiplayerGuys.FGCommon.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\interop\TheMultiplayerGuys.FGCommon.dll</HintPath>
     </Reference>
     <Reference Include="TheMultiplayerGuys.Utility">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\unhollowed\TheMultiplayerGuys.Utility.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\interop\TheMultiplayerGuys.Utility.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Addressables">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\unhollowed\Unity.Addressables.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\interop\Unity.Addressables.dll</HintPath>
     </Reference>
     <Reference Include="Unity.ResourceManager">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\unhollowed\Unity.ResourceManager.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\interop\Unity.ResourceManager.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\unhollowed\UnityEngine.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\interop\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AnimationModule">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\unhollowed\UnityEngine.AnimationModule.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\interop\UnityEngine.AnimationModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\unhollowed\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\interop\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.ImageConversionModule">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\unhollowed\UnityEngine.ImageConversionModule.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\interop\UnityEngine.ImageConversionModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.InputLegacyModule">
-      <HintPath>..\..\Lithium\Lithium\bin\Debug\netstandard2.1\UnityEngine.InputLegacyModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>..\..\Lithium\Lithium\bin\Debug\netstandard2.1\UnityEngine.PhysicsModule.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\interop\UnityEngine.InputLegacyModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\unhollowed\UnityEngine.UI.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\interop\UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="Wushu.LevelEditor.Runtime">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\unhollowed\Wushu.LevelEditor.Runtime.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\interop\Wushu.LevelEditor.Runtime.dll</HintPath>
     </Reference>
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy &quot;$(TargetPath)&quot; &quot;C:\Program Files (x86)\Steam\steamapps\common\Fall Guys\BepInEx\plugins\CreativeExpansionPack&quot; /Y " />
+    
+<Exec Command="explorer.exe steam://rungameid/1097150 " />
+  </Target>
 </Project>

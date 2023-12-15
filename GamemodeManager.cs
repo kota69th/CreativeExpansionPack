@@ -6,9 +6,9 @@ using FraggleExpansion.Patches.Gamemodes;
 using UnityEngine;
 using FG.Common.CMS;
 using FG.Common.Fraggle;
-using UnhollowerBaseLib;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using System.Collections;
-using BepInEx.IL2CPP.Utils.Collections;
+using BepInEx.Unity.IL2CPP.Utils.Collections;
 using ScriptableObjects;
 
 namespace FraggleExpansion
@@ -39,7 +39,7 @@ namespace FraggleExpansion
             void GetBackToLevelEditor(bool On)
             {
                 MenuUI.gameObject.SetActive(true);
-                LevelEditorManager.Instance.ReplaceCurrentLevelEditorState(new LevelEditorStateReticle(LevelEditorManager.Instance, new Vector3(0, 0, 0)).Cast<ILevelEditorState>());
+                LevelEditorManager.Instance.ReplaceCurrentLevelEditorState(new LevelEditorStateReticle(new Vector3(0, 0, 0)).Cast<ILevelEditorState>());
                 LevelEditorManager.Instance.Audio.UnpauseBuildMusic();
             }
             Il2CppSystem.Action<bool> ActionOnClick = new System.Action<bool>(GetBackToLevelEditor);
@@ -131,6 +131,12 @@ namespace FraggleExpansion
             Datas[0] = GameModeManager.GameModeConfigs[0];
             Datas[1] = Survival;
             Datas[2] = RisingSlime;
+
+            foreach (var Gamemode in Datas)
+            {
+                if(Gamemode.ID != "GAMEMODE_GAUNTLET")
+                Gamemode._skyboxDefinitions = GameModeManager.GetAvailableGameMode("GAMEMODE_GAUNTLET").SkyboxDefinitions;
+            }
 
             GameModeManager._allGameModeDatas = Datas;
             GameModeManager._availableGameModeDatas = Datas;

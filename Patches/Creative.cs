@@ -2,10 +2,12 @@
 using FG.Common;
 using FGClient;
 using HarmonyLib;
-using UnhollowerBaseLib;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using UnityEngine;
 using Wushu.Framework.ExtensionMethods;
 using FMODUnity;
+using System.Runtime.InteropServices;
+using FG.Common.Fraggle;
 
 namespace FraggleExpansion.Patches.Creative
 {
@@ -23,13 +25,14 @@ namespace FraggleExpansion.Patches.Creative
                     RuntimeManager.LoadBank(FraggleExpansionData.MusicBankPlayMode + ".assets");
                 }
 
-                AudioLevelEditorStateListener._instance._randomMusicEvent = FraggleExpansionData.MusicEventPlayMode;
+                AudioLevelEditorStateListener._instance._musicEvent = FraggleExpansionData.MusicEventPlayMode;
                 AudioLevelEditorStateListener._instance.OnStartGameplayMusic(new StartGameplayMusic());
             }
             return !FraggleExpansionData.CustomTestMusic;
         }
 
-        [HarmonyPatch(typeof(LevelEditorStateExplore), nameof(LevelEditorStateExplore.DisableState)), HarmonyPrefix]
+
+        [HarmonyPatch(typeof(LevelEditorStateExplore), "DisableState"), HarmonyPrefix]
         public static bool LastPositionDisplayOnReticle(ILevelEditorState nextState)
         {
             if (FraggleExpansionData.LastPostion)
@@ -40,7 +43,7 @@ namespace FraggleExpansion.Patches.Creative
                 MiscData.CurrentPositionDisplay.GetComponent<MeshRenderer>().material = ThemeManager._currentTheme.FilletMaterial;
                 MiscData.CurrentPositionDisplay.GetComponent<MeshRenderer>().material.color = new Color(0, 5, 5, 1);
                 MiscData.CurrentPositionDisplay.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
-                MiscData.CurrentPositionDisplay.GetComponent<BoxCollider>().isTrigger = true;
+                UnityEngine.Object.Destroy(MiscData.CurrentPositionDisplay.GetComponent("BoxCollider"));
                 MiscData.CurrentPositionDisplay.transform.position = UnityEngine.Object.FindObjectOfType<FallGuysCharacterController>().transform.position;
             }
             UnityEngine.Object.FindObjectOfType<LevelEditorNavigationScreenViewModel>().SetPlayVisible(true);
@@ -49,8 +52,8 @@ namespace FraggleExpansion.Patches.Creative
         }
 
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(LevelEditorStateTest), nameof(LevelEditorStateTest.Initialise))]
-        [HarmonyPatch(typeof(LevelEditorStateExplore), nameof(LevelEditorStateExplore.Initialise))]
+        [HarmonyPatch(typeof(LevelEditorStateTest), "Initialise")]
+        [HarmonyPatch(typeof(LevelEditorStateExplore), "Initialise")]
         public static bool LastPositionDisplayOnPlayState()
         {
             if (FraggleExpansionData.LastPostion)
@@ -63,17 +66,41 @@ namespace FraggleExpansion.Patches.Creative
             return true;
         }
 
-        [HarmonyPatch(typeof(LevelEditorManager), nameof(LevelEditorManager.InitialiseLocalCharacter)), HarmonyPrefix]
-        public static bool MainSkinInFraggle(LevelEditorManager __instance, GameObject playerGameObject, out FallGuysCharacterController characterController, out ClientPlayerUpdateManager playerUpdateManager)
+
+        /*
+        [HarmonyPatch(typeof(LevelEditorManager), nameof(LevelEditorManager.SetPlayerGameObject)), HarmonyPostfix]
+        public static void MainSkinInFraggle(LevelEditorManager __instance, GameObject playerObject)
         {
             if (FraggleExpansionData.UseMainSkinInExploreState)
             {
                 var CustomisationSelection = GlobalGameStateClient.Instance.PlayerProfile.CustomisationSelections;
-                CustomisationManager.Instance.ApplyCustomisationsToFallGuy(playerGameObject, CustomisationSelection, -1);
+                CustomisationManager.Instance.ApplyCustomisationsToFallGuy(playerObject, CustomisationSelection, -1);
             }
-            characterController = null;
-            playerUpdateManager = null;
-            return true;
+        }
+        */
+
+        [HarmonyPatch(typeof(LevelEditorManager), nameof(LevelEditorManager.CanAffordObjectCost)), HarmonyPrefix]
+        public static bool CanAffordAnyCost(LevelEditorManager __instance, out bool __result, int cost)
+        {
+            __result = true;
+            
+            return !FraggleExpansionData.RemoveCostAndStock;
+        }
+        [HarmonyPatch(typeof(LevelEditorManager), nameof(LevelEditorManager.IsOverBudget)), HarmonyPrefix]
+        public static bool IsNeverOverBudget(LevelEditorManager __instance, out bool __result)
+        {
+            __result = false;
+
+            return !FraggleExpansionData.RemoveCostAndStock;
+        }
+
+
+        [HarmonyPatch(typeof(LevelEditorPlaceableObject), nameof(LevelEditorPlaceableObject.CanBeClipped)), HarmonyPrefix]
+        public static bool CanBeClippedTheCEPWay(LevelEditorPlaceableObject __instance, out bool __result)
+        {
+            __result = false;
+            
+            return !LevelEditorManager.Instance.UI._radialDefinition.RadialDefinitions[2].IsToggleOn();
         }
 
         [HarmonyPatch(typeof(LevelEditorPlaceableObject), nameof(LevelEditorPlaceableObject.CanBeDeleted)), HarmonyPrefix]
@@ -99,13 +126,13 @@ namespace FraggleExpansion.Patches.Creative
         public static bool Clipping(LevelEditorStateReticleBase __instance, out bool __result)
         {
             __result = true;
-            return !FraggleExpansionData.CanClipObjects;
+            return !LevelEditorManager.Instance.UI._radialDefinition.RadialDefinitions[2].IsToggleOn();
         }
 
         [HarmonyPatch(typeof(LevelLoader), nameof(LevelLoader.LoadObjects)), HarmonyPostfix]
         public static void BoundsOnExistingRound(LevelLoader __instance, Il2CppReferenceArray<UGCObjectDataSchema> schemas)
         {
-            if (FraggleExpansionData.BypassBounds)
+            if (FraggleExpansionData.BypassBounds && FraggleCommonManager.Instance.IsInLevelEditor)
                 LevelEditorManager.Instance.MapPlacementBounds = new Bounds(LevelEditorManager.Instance.MapPlacementBounds.center, new Vector3(100000, 100000, 100000));
         }
     }
@@ -125,6 +152,7 @@ namespace FraggleExpansion.Patches.Creative
         [HarmonyPatch(typeof(LevelEditorCheckpointFloorData), nameof(LevelEditorCheckpointFloorData.UpdateChevron)), HarmonyPrefix]
         public static bool FixChevronScaling(ref Vector3 scale)
         {
+            // light work no reaction
             scale = scale.Abs();
             return true;
         }

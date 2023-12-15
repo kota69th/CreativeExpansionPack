@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using UnhollowerRuntimeLib;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
+using Il2CppInterop.Runtime.Injection;
 
 namespace FraggleExpansion
 {
@@ -30,9 +30,11 @@ namespace FraggleExpansion
             Main.Instance.OnSceneWasLoaded();
         }
 
+        
         public void Update()
         {
             Main.Instance.OnUpdate();
         }
+        
     }
 }

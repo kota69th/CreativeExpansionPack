@@ -1,5 +1,7 @@
-﻿using FG.Common;
+﻿using AsmResolver.PE.DotNet.Cil;
+using FG.Common;
 using HarmonyLib;
+using UnityEngine;
 
 namespace FraggleExpansion.Patches.Reticle
 {
@@ -9,17 +11,33 @@ namespace FraggleExpansion.Patches.Reticle
         [HarmonyPatch(typeof(LevelEditorResourceBarViewModel), nameof(LevelEditorResourceBarViewModel.TotalPointsText), MethodType.Getter), HarmonyPrefix]
         public static bool ResourceBarTotalUsablePoints(out string __result)
         {
-            __result = FraggleExpansionData.RemoveCostAndStock ? "  ∞" : "1000";
+            __result = FraggleExpansionData.RemoveCostAndStock ? "  ∞" : CMSGlobalSettings.UGCBudgetLimit.ToString();
             return false;
         }
 
-        [HarmonyPatch(typeof(LevelEditorResourceBarViewModel), nameof(LevelEditorResourceBarViewModel.BuildPointsUsedText), MethodType.Getter), HarmonyPrefix]
-        public static bool ResourceBarUsedBuildPoints(out string __result)
+        [HarmonyPatch(typeof(LevelEditorCarrouselItemViewModel), nameof(LevelEditorCarrouselItemViewModel.UpdateCostsStocks)), HarmonyPrefix]
+        public static bool ItemCostNStockDisplay(LevelEditorCarrouselItemViewModel __instance)
         {
-            __result = "NA  ";
+            __instance.IsCostDynamic = false;
+            __instance.SetCost(0, __instance._placeableObject, true);
+            __instance.SetStock(-1, false);
+
             return !FraggleExpansionData.RemoveCostAndStock;
         }
 
+        [HarmonyPatch(typeof(LevelEditorCarrouselItemViewModel), nameof(LevelEditorCarrouselItemViewModel.UpdateObjectOverlapping)), HarmonyPrefix]
+        public static bool ItemOverlapDisplay(LevelEditorCarrouselItemViewModel __instance)
+        {
+            __instance.CanObjectOverlap = false;
+
+            return !FraggleExpansionData.CanClipObjects;
+        }
+
+        [HarmonyPatch(typeof(LevelEditorManagerUI), nameof(LevelEditorManagerUI.DisplayHudMessage)), HarmonyPrefix]
+        public static bool RemoveBudgetNotice(string key, bool shouldAnimateEnter = true, bool shouldAnimateLeave = true)
+        { 
+            return key != "Over Budget";
+        }
         #endregion
 
         #region Text Patches
@@ -35,7 +53,7 @@ namespace FraggleExpansion.Patches.Reticle
         {
             __result = false;
             return false;
-        }
+        } // oops
         #endregion
     }
 }

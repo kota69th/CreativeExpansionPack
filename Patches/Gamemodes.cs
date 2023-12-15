@@ -8,7 +8,8 @@ using Levels.Obstacles;
 using ScriptableObjects;
 using System;
 using System.Linq;
-using UnhollowerBaseLib;
+using System.Runtime.InteropServices;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using UnityEngine;
 
 namespace FraggleExpansion.Patches.Gamemodes
@@ -17,22 +18,6 @@ namespace FraggleExpansion.Patches.Gamemodes
     public class SlimeGamemodesPatches
     {
         #region Object Fixes
-        [HarmonyPatch(typeof(COMMON_SelfRespawner), nameof(COMMON_SelfRespawner.FixedUpdate)), HarmonyPrefix]
-        public static bool SelfRespawnSurvival(COMMON_SelfRespawner __instance)
-        {
-            if (FraggleCommonManager.Instance.IsInLevelEditor && LevelEditorOptionsSingleton.Instance.GameModeID != "GAMEMODE_GAUNTLET")
-            {
-                if (__instance.transform.position.y < -120 && __instance.CanRespawn && !__instance._isWaitingForRespawn)
-                {
-                    __instance.TryToRespawn();
-                }
-            }
-            else if (__instance.transform.position.y < __instance._respawnTriggerY && __instance.CanRespawn && !__instance._isWaitingForRespawn)
-            {
-                __instance.TryToRespawn();
-            }
-            return false;
-        }
         #endregion
 
 
@@ -61,7 +46,7 @@ namespace FraggleExpansion.Patches.Gamemodes
 
     public class SurvivalModePatches
     {
-        
+
         //
         // Gamemode Enabling
         //
@@ -124,6 +109,7 @@ namespace FraggleExpansion.Patches.Gamemodes
             __instance._completionCriteria[LevelEditorOptionsSingleton.Criteria.HexSpawnPoints] = SlimeGamemodesManager.CurrentStart != null;
         }
 
+
         [HarmonyPatch(typeof(LevelEditorManager), nameof(LevelEditorManager.GetStartAndEndPlatforms)), HarmonyPrefix]
         public static bool GetBootyBraindeadStartLine(LevelEditorManager __instance, ILevelEditorState currentState, out LevelEditorPlaceableObject start, out LevelEditorPlaceableObject end)
         {
@@ -136,7 +122,8 @@ namespace FraggleExpansion.Patches.Gamemodes
             }
             return GameModeManager.CurrentGameModeData.ID != "GAMEMODE_SURVIVAL";
         }
-
+        
+       
         [HarmonyPatch(typeof(LevelEditorManager), nameof(LevelEditorManager.StartPlatform), MethodType.Getter), HarmonyPrefix]
         public static bool StartPlatformSurvivalFix(LevelEditorManager __instance, out LevelEditorPlaceableObject __result)
         {
@@ -197,16 +184,22 @@ namespace FraggleExpansion.Patches.Gamemodes
         #endregion
 
         #region Existing Round Loading
-        [HarmonyPatch(typeof(LevelLoader), nameof(LevelLoader.LoadObjects)), HarmonyPrefix]
-        public static bool LoadSlimeRisingData(LevelLoader __instance, Il2CppReferenceArray<UGCObjectDataSchema> schemas)
+        /*
+        [HarmonyPatch(typeof(LevelLoader), nameof(LevelLoader.LoadObjects)), HarmonyPostfix]
+        public static void LoadSlimeRisingData(LevelLoader __instance, Il2CppReferenceArray<UGCObjectDataSchema> schemas)
         {
+            if(__instance.GetGameMode().ID == "GAMEMODE_SLIMECLIMB")
             if (__instance.LevelSchema != null)
             {
-                DataRisingSlime.SlimeHeightPercentage = __instance.LevelSchema.SlimeHeight.Value * 100;
-                DataRisingSlime.SlimeSpeedPercentage = __instance.LevelSchema.SlimeSpeed.Value * 100;
-            }
-            return true;
+                if (__instance.LevelSchema.SlimeHeight.hasValue)
+                        DataRisingSlime.SlimeHeightPercentage = __instance.LevelSchema.SlimeHeight.Value * 100;
+                else DataRisingSlime.SlimeHeightPercentage = 50;
+                if (__instance.LevelSchema.SlimeSpeed.hasValue)
+                    DataRisingSlime.SlimeSpeedPercentage = __instance.LevelSchema.SlimeSpeed.Value * 100;
+                else DataRisingSlime.SlimeSpeedPercentage = 50;
+                }
         }
+        */
         #endregion
 
         #region Slime Data Management
