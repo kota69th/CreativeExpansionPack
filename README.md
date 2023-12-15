@@ -14,18 +14,18 @@ How is Creative Expansion Pack made?
 > Creative Expansion Pack is made using BepinEx, a modding framework for games made with Unity.
 
 Can I get banned for using Creative Expansion Pack?
-> There's no reported case of a user of the mod getting banned during its private state, but the mod's creator has no implication if Mediatonic takes any actions on your account due to using the mod, use it at your own risk! With the whole nature of Fall Guys Creative and the implications of the mod, the question of if you can use Creative Expansion Pack is up to how much you value your account, even tho you are very unlikely of having to go through a ban if you play it safe...
+> There's no reported case of a Fall Guys player getting banned for having used this mod, but the mod's creator has no implication if Mediatonic takes any actions on your account due your usage of this mod, use it at your own risk! With the whole nature of Fall Guys Creative and the implications of the mod, the question of if you can use Creative Expansion Pack is up to how much you value your account, even tho you are very unlikely of having to go through a ban if you don't actually try to get your account suspended.
 
 Is Creative Expansion Pack against Fall Guys' EULA?
 > After checking, Creative Expansion Pack **seems** to not **explicitly** be against Fall Guys' EULA, this mod doesn't give you a "competitive advantage" over a player playing a legitimate and unmodified copy of the game.‎
 >
-> However, PLEASE MAKE GOOD USE OF CREATIVE EXPANSION PACK!!! This mod is clearly not a joke and has mad power over Fall Guys Creative, and everyone knows that with great power comes great responsibility.
+> However, PLEASE MAKE GOOD USE OF CREATIVE EXPANSION PACK!!! This mod is clearly made for people who wants to go further with the Creative aspect that the game recently gained and not the average asshole making the shittiest most broken rounds that can make your game crash before the countdown even starts!!!!!
 
 What features does Creative Expansion Pack include?
-> A lot, try it out for yourself!
+> A lot, try it out yourself!
 
-How do the others scale obstacles?
-> Scaling objects in currently not part of Creative Expansion Pack's feature set, tools used to scale objects will not be mentionned here however.
+How can the others use scale parameters that are beyond the scales that FGC normally proposes?
+> These scales can only be accessed using tools that aren't affiliated to Creative Expansion Pack itself.
 
 I can't play normal Fall Guys when Creative Expansion Pack is installed, how to deal with that?!
 > You can't, in order to play the normal game you got to uninstall BepinEx, you can do that by using the "Restore_EAC" batch script in your game's root and quickly switch back to the mod by using the "Install_BepinEx" batch script that's in the same folder.
