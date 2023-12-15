@@ -6,7 +6,7 @@
 
 
 ### Creative Expansion Pack is currently being updated to work with the latest game update.
-### Coming back soon!
+### A pre-release version of the Hunter Stage 2 release is already available [here](https://github.com/kota69th/CreativeExpansionPack/releases/tag/pre-release1).
 
 ## Questions and Answers
 
@@ -47,14 +47,14 @@ I can't play normal Fall Guys when Creative Expansion Pack is installed, how to 
 2. Run the Restore_EAC batch file, if you want to go back to Expansion Pack just run Install_BepinEx again.
 
 ## Credits
-> kota81th (previously kota69th), since I created the mod (no shit)
 
-> sinai for making UnityExplorer (brought mad help during the mod's dev.)
+> sinai for making UnityExplorer (brought huge help during the mod's dev)
 
-> crispy_squid for the mod's logo and Rising Slime Icon in-game.
+> Owyn for making a version of UnityExplorer that works with CEP's latest pre-release build
+
+> crispy_squid for the custom assets used in the mod (its logo and the Rising Slime gamemode icon)
 
 > MelonLoader for a tiny part of the code relating to Scenes.
 
-###### Honorable mention for the logo [here](https://cdn.discordapp.com/attachments/857982180818812949/1135179107211161721/F2PlYAwXoAAFZms.png) (by Ocapa)
-
+#### Creative Expansion Pack is a BepinEx plugin made by kota81th.
 ##### Not affiliated with Mediatonic.
