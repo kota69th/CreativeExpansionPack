@@ -5,8 +5,7 @@
 > A Fall Guys mod meant to improve Fall Guys Creative.
 
 
-### Creative Expansion Pack is currently being updated to work with the latest game update.
-### A pre-release version of the Hunter Stage 2 release is already available [here](https://github.com/kota69th/CreativeExpansionPack/releases/tag/pre-release1).
+### Creative Expansion Pack is discontinued as of now. (and probably forever)
 
 ## Questions and Answers
 
